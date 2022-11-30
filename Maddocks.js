@@ -82,8 +82,7 @@ const paddockManagers = [
   console.log(sortPaddockTypeByTotalArea())
  
   // 3 Arreglo con los nombres de los administradores, ordenados decrecientemente por la suma TOTAL de hectáreas que administran.
-  function sortFarmManagerByAdminArea() {
-    const arr = [];
+  function sortFarmManagerByAdminArea(paddockManagers, paddocks) {
     return paddockManagers
       .map((manager) => [
         manager.name,
@@ -96,7 +95,7 @@ const paddockManagers = [
       .sort((a, b) => b[1] - a[1])
       .map((result) => result[0]);
   }
-  console.log(sortFarmManagerByAdminArea())
+  console.log(sortFarmManagerByAdminArea(paddockManagers, paddocks))
   
   // 4 Objeto en que las claves sean los nombres de los campos y los valores un arreglo con los ruts de sus administradores ordenados alfabéticamente por nombre.
   function farmManagerNames() {
@@ -182,26 +181,31 @@ const paddockManagers = [
   // 8 Objeto en que las claves sean el tipo de cultivo concatenado con su año de plantación (la concatenación tiene un separador de guión ‘-’, por ejemplo AVELLANOS-2020) y 
   // el valor otro objeto en el cual la clave sea el id del administrador y el valor el nombre del administrador
   function paddocksManagers() {
-    const obj = {}
+    const obj = {};
 
     for (key in paddocks) {
-      const subObj = {}
+      const subObj = {};
 
-      const typeId = paddocks[key].paddockTypeId
-      const typeYear = paddocks[key].harvestYear
-      const typeName = paddockType.find(type => type.id === typeId).name
+      const typeId = paddocks[key].paddockTypeId;
+      const typeYear = paddocks[key].harvestYear;
+      const typeName = paddockType.find((type) => type.id === typeId).name;
 
-      paddockMatching = paddocks.filter(paddock => paddock.harvestYear === typeYear && paddock.paddockTypeId === typeId)
+      paddockMatching = paddocks.filter(
+        (paddock) =>
+          paddock.harvestYear === typeYear && paddock.paddockTypeId === typeId
+      );
 
       for (key in paddockMatching) {
-        const managerId = paddockMatching[key].paddockManagerId
-        const managerName = paddockManagers.find(manager => manager.id === managerId).name
-        subObj[managerId] = managerName
+        const managerId = paddockMatching[key].paddockManagerId;
+        const managerName = paddockManagers.find(
+          (manager) => manager.id === managerId
+        ).name;
+        subObj[managerId] = managerName;
       }
 
-      obj[`${typeName}-${typeYear}`] = subObj
+      obj[`${typeName}-${typeYear}`] = subObj;
     }
-    return obj
+    return obj;
   }
   console.log(paddocksManagers())
 
@@ -209,5 +213,18 @@ const paddockManagers = [
   //  Luego devolver el lugar que ocupa este nuevo administrador en el ranking de la pregunta 3.
   // No modificar arreglos originales para no alterar las respuestas anteriores al correr la solución
   function newManagerRanking() {
-    // CODE HERE
+    const newPaddockManagers = paddockManagers.concat({
+      id: 7,
+      taxNumber: '13225452554',
+      name: 'FABRICIO RICHIERI',
+    });
+    const newPaddocks = paddocks.concat({
+      paddockManagerId: 7,
+      farmId: 1,
+      paddockTypeId: 4,
+      harvestYear: 2017,
+      area: 900,
+    });
+    return sortFarmManagerByAdminArea(newPaddockManagers, newPaddocks);
   }
+  console.log(newManagerRanking());
